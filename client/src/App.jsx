@@ -11,10 +11,7 @@ import ShopingList from "./pages/ShopingList";
 const App = () => {
   return (
     <Routes>
-      {/* Home is at / */}
       <Route path="/" element={<Home />} />
-
-      {/* Nested routes under /syn */}
       <Route path="syn" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="task-management" element={<TaskManagement />} />
