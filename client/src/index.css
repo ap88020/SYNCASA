@@ -1,1 +1,31 @@
+/* ✅ 1. Fonts come first */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Prata&family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* ✅ 2. Then Tailwind */
 @import "tailwindcss";
+
+/* ✅ 3. Then your own CSS rules */
+* {
+  font-family: "Inter", sans-serif;
+}
+
+html,
+body,
+div,
+section,
+header,
+footer,
+main,
+nav {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ✅ 4. Then custom Tailwind extensions */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #EDEDED;
+  --color-primary-dark: #191919;
+  --color-surface-dark: #2d2d2d;
+  --color-accent-dark: #50fa7b;
+}

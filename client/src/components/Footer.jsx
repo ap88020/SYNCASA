@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 const Footer = () => {
   return (
     <>
-      <footer className="flex flex-col items-center justify-around w-full py-4 md:py-4 max-w-7xl text-sm mx-auto rounded bg-slate-50 mt-3 text-gray-800/70">
+      <footer className="flex flex-col items-center justify-around w-full py-4 md:py-4 max-w-7xl text-sm mx-auto rounded bg-slate-50 mt-3 text-gray-800/70 dark:bg-surface-dark dark:text-white ">
         <img src={assets.logo} alt="logo" className="w-32" />
         <p className="mt-4 text-center">
           Copyright © 2025 SyncCassa. All
@@ -13,14 +13,14 @@ const Footer = () => {
         <div className="flex items-center gap-4 mt-6">
           <a
             href="#"
-            className="font-medium text-gray-800 hover:text-black transition-all"
+            className="font-medium text-gray-800 hover:text-black transition-all dark:text-white"
           >
             Brand Guidelines
           </a>
           <div className="h-4 w-px bg-black/20"></div>
           <a
             href="#"
-            className="font-medium text-gray-800 hover:text-black transition-all"
+            className="font-medium text-gray-800 hover:text-black transition-all dark:text-white"
           >
             Trademark Policy
           </a>

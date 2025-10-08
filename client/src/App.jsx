@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -10,7 +10,8 @@ import ShopingList from "./pages/ShopingList";
 
 const App = () => {
   return (
-    <Routes>
+    <div className="bg-primary dark:bg-primary-dark">
+          <Routes>
       <Route path="/" element={<Home />} />
       <Route path="syn" element={<Layout />}>
         <Route index element={<Dashboard />} />
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="shop-list" element={<ShopingList />} />
       </Route>
     </Routes>
+    </div>
   );
 };
 

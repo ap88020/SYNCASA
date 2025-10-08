@@ -1,13 +1,20 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 
 const Layout = () => {
   return (
-    <div>
-         <h1>Layout Header</h1>
-      <Outlet />
+    <div className="h-full w-full">
+      < Navbar />
+      <div className="flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+        <Sidebar />
+        <div className="flex-1 bg-[#F4F7FB]">
+          < Outlet />
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

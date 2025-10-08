@@ -6,7 +6,7 @@ import Features from '../components/Features'
 
 const Home = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-200 py-2">
+    <div className="flex flex-col min-h-screen py-2  ">
       {/* Navbar */}
       <Navbar />
 
