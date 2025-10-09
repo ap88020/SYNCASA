@@ -5,9 +5,9 @@ import Navbar from "../components/Navbar";
 
 const Layout = () => {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full ">
       < Navbar />
-      <div className="flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+      <div className="flex flex-1 h-[calc(100vh-64px)] overflow-hidden ">
         <Sidebar />
         <div className="flex-1 bg-[#F4F7FB]">
           < Outlet />

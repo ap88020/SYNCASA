@@ -29,3 +29,7 @@ nav {
   --color-surface-dark: #2d2d2d;
   --color-accent-dark: #50fa7b;
 }
+
+::-webkit-scrollbar{
+  width: 2px;
+}
