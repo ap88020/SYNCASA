@@ -4,16 +4,6 @@ import { assets } from "../assets/assets";
 import DarkToggle from "./darkToggle";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
   return (
     <header className="flex items-center justify-between px-6 py-3 md:py-4 max-w-7xl rounded mx-auto w-full bg-white dark:bg-surface-dark border-b border-gray-200  dark:shadow-green-500/50">
       <Link to="/">
