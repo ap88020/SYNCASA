@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { assets } from "../assets/assets";
-import DarkToggle from "./darkToggle";
+import DarkToggle from "./DarkToggle";
 
 const Navbar = () => {
   return (
