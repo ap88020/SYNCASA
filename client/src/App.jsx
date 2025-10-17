@@ -7,20 +7,30 @@ import TaskManagement from "./pages/TaskManagement";
 import BillSplitting from "./pages/BillSplitting";
 import GroupChat from "./pages/GroupChat";
 import ShopingList from "./pages/ShopingList";
+import Register from "./components/Register";
+import { Toaster , toast } from 'react-hot-toast'
+import Profile from "./pages/Profile";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
     <div className="bg-primary dark:bg-primary-dark">
-          <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="syn" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="task-management" element={<TaskManagement />} />
-        <Route path="bill-splitting" element={<BillSplitting />} />
-        <Route path="group-chat" element={<GroupChat />} />
-        <Route path="shop-list" element={<ShopingList />} />
-      </Route>
-    </Routes>
+      < Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Register />} />
+        < Route path="profile" element={<Profile/>}/>
+        <Route path="syn" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="task-management" element={<TaskManagement />} />
+          <Route path="bill-splitting" element={<BillSplitting />} />
+          <Route path="group-chat" element={<GroupChat />} />
+          <Route path="shop-list" element={<ShopingList />} />
+        </Route>
+      </Routes>
+      < Toaster position="top-bottom" />
+      < Footer />
     </div>
   );
 };

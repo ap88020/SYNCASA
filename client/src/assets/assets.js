@@ -1,5 +1,7 @@
 import logo from "./logo.png";
 import green_logo from "./logo_green.png";
+import upload_area from "./upload_area.png"
+
 import {
   ListChecks,
   DollarSign,
@@ -11,6 +13,7 @@ import {
 export const assets = {
   logo,
   green_logo,
+  upload_area
 };
 
 export const features = [
