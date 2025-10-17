@@ -1,7 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import connectDB from './src/config/mongoDb.js';
+import connectDB from './src/config/mongodb.js';
 import userRouter from './src/routes/user.routes.js'
 
 const app = express();
