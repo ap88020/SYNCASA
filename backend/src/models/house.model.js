@@ -48,11 +48,13 @@ const houseSchema = new mongoose.Schema({
 })
 
 
-houseSchema.pre('save', async function(next){
+houseSchema.pre('validate', async function(next){
     if(!this.isNew) return next();
 
     const generateJoinCode = () => {
-        Math.random().toString(36).substring(2,8).toUpperCase();
+        const code = Math.random().toString(36).substring(2,8).toUpperCase();
+        console.log(code);
+        return code;
     } 
 
     let joinCode = generateJoinCode();

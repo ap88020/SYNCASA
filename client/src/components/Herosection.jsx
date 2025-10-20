@@ -29,7 +29,7 @@ const Herosection = () => {
         <div className="flex items-center gap-4 mb-7">
           
           <Link
-            to="/syn"
+            to="/house"
             className="bg-green-500 hover:bg-green-600 text-white font-medium rounded px-9 h-12 m-1 ring-offset-2 ring-1 ring-indigo-400 flex items-center transition-colors"
           >
             Get started

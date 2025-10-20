@@ -3,34 +3,34 @@ import axios from 'axios'
 const backend_url = import.meta.env.VITE_BACKEND_URL;
 
 const register = async (userData) => {
-    console.log("Registering with:", userData); // ✅ Debug
+    console.log("Registering with:", userData);
     const response = await axios.post(`${backend_url}/user/register`, userData, {
         headers: {
             'Content-Type': 'application/json' 
         }
     });
     
-    console.log("Register response:", response.data); // ✅ Debug response
+    console.log("Register response:", response.data);
     
     if(response.data.success){
-        console.log("Setting token:", response.data.token); // ✅ Debug token
+        console.log("Setting token:", response.data.token);
         localStorage.setItem("token", response.data.token)
     }
     return response.data
 }
 
 const login = async (userData) => {
-    console.log("Logging in with:", userData); // ✅ Debug
+    console.log("Logging in with:", userData);
     const response = await axios.post(`${backend_url}/user/login`, userData, {
         headers: {
             'Content-Type': 'application/json'
         }
     });
 
-    console.log("Login response:", response.data); // ✅ Debug response
+    console.log("Login response:", response.data);
 
     if(response.data.success){
-        console.log("Setting token:", response.data.token); // ✅ Debug token
+        console.log("Setting token:", response.data.token);
         localStorage.setItem("token", response.data.token);
     }
 
