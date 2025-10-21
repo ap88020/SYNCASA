@@ -1,154 +1,528 @@
-import React, { useEffect } from "react";
-import { LogOut, Moon, Bell, Globe } from "lucide-react";
-import {useDispatch,useSelector} from 'react-redux'
-import {useNavigate} from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import {
+  LogOut,
+  Moon,
+  Sun,
+  Bell,
+  Globe,
+  Users,
+  Copy,
+  Check,
+  Settings,
+  User,
+  Home,
+  Shield,
+  Mail,
+  Phone,
+  Building,
+  Key,
+  Calendar,
+  ChevronRight,
+  Camera,
+  Edit,
+  X
+} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getProfile, login } from "../feature/auth/authSlice";
-
+import { getUserHouse } from "../feature/house/houseSlice";
 
 const Profile = () => {
-  
-  const userDuplicate = {
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    phone: "+1 (555) 123-4567",
-    household: {
-      name: "Downtown Apartment",
-      inviteCode: "SYNC–7899",
-      members: [
-        { name: "Alex Johnson", role: "Owner", joined: "1/15/2023" },
-        { name: "Sarah Miller", role: "Member", joined: "2/20/2023" },
-        { name: "Sarah Miller", role: "Member", joined: "3/10/2023" },
-      ],
-    },
-  };
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const {loading,success,message,user} = useSelector((state) => state.auth);
+  const { loading, success, message, user } = useSelector((state) => state.auth);
+  const { currentHouse, houses } = useSelector((state) => state.house);
+  const [copied, setCopied] = useState(false);
+  const [members, setMembers] = useState([]);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    dispatch(getProfile())
-  },[dispatch])
+    dispatch(getProfile());
+    dispatch(getUserHouse());
+  }, [dispatch]);
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  const applyTheme = (newTheme) => {
+    const root = window.document.documentElement;
+    if (newTheme === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("theme", newTheme);
+  };
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(login());
     navigate("/");
-  }
+  };
+
+  useEffect(() => {
+    if (houses && houses.length > 0) {
+      const allMembers = houses.flatMap(house => house.members || []);
+      setMembers(allMembers);
+    }
+  }, [houses]);
+
+  const copyInviteCode = (joinCode) => {
+    navigator.clipboard.writeText(joinCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const switchToHome = () => {
+    navigate("/");
+  };
+
+  // Image Upload Handlers
+  const handleImageEdit = () => {
+    setIsEditingImage(true);
+  };
+
+  const handleImageCancel = () => {
+    setIsEditingImage(false);
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
+
+  const handleImageSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+      }
+
+      setSelectedImage(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage) {
+      alert('Please select an image first');
+      return;
+    }
+
+    try {
+      // Here you would typically upload to your backend
+      // For now, we'll simulate an upload
+      console.log('Uploading image:', selectedImage);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // In a real app, you would dispatch an action to update the profile
+      // dispatch(updateProfileImage(selectedImage));
+      
+      alert('Profile image updated successfully!');
+      setIsEditingImage(false);
+      setSelectedImage(null);
+      setImagePreview(null);
+      
+      // Refresh profile data
+      dispatch(getProfile());
+      
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    }
+  };
+
+  // Format date for professional display
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center px-2 sm:px-4 md:px-8 dark:bg-primary-dark">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-md p-6 sm:p-8 space-y-6 dark:bg-gray-600">
-        {/* Profile Section */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4 dark:text-white">Profile</h2>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <img
-              src={user.avatar || "https://i.pravatar.cc/100?img=3"}
-              alt="profile"
-              className="w-20 h-20 rounded-full border"
-            />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
             <div>
-              <h3 className="text-lg font-semibold dark:text-white">{user.name}</h3>
-              <p className="text-gray-500 dark:text-gray-50">{user.email}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Profile</h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your account and households</p>
             </div>
-          </div>
-
-          <div className="mt-6 space-y-4 text-gray-700 dark:text-gray-50">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-50">Phone Number</p>
-              <input
-                type="text" 
-                readOnly
-                value={userDuplicate.phone}
-                className="w-full border rounded-lg p-2 mt-1 bg-gray-50 text-gray-700"
-              />
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-50">Household</p>
-              <div className="mt-2 space-y-1 dark:text-gray-50">
-                <p className="dark:text-gray-50">🏠 {userDuplicate.household.name}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-50">
-                  Invite code: {userDuplicate.household.inviteCode}
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 mb-2 dark:text-gray-50">Members</p>
-              <ul className="space-y-2">
-                {userDuplicate.household.members.map((member, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={`https://i.pravatar.cc/40?img=${index + 5}`}
-                        alt={member.name}
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-800">
-                          {member.name}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {member.role} • Joined {member.joined}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <button
-              onClick={handleLogout} 
-              className="w-full border border-gray-300 dark:border-green-500 text-gray-700 py-2 rounded-lg flex justify-center items-center gap-2 hover:bg-gray-100 dark:bg-slate-800 hover:dark:bg-slate-900 cursor-pointer transition-colors dark:text-green-500">
-              <LogOut size={18} />
-              Logout
+              onClick={switchToHome}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+            >
+              <Home size={16} />
+              Back to Home
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Settings Section */}
-        <div className="border-t pt-6">
-          <h2 className="text-xl font-semibold mb-4 dark:text-white">Settings</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium dark:text-white">Dark Mode</p>
-                <p className="text-sm text-gray-500">
-                  Switch between light and dark themes
-                </p>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          
+          {/* Left Column - Profile & Households */}
+          <div className="xl:col-span-2 space-y-8">
+            
+            {/* Profile Card */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <div className="relative group">
+                    <img
+                      src={imagePreview || user?.avatar || "https://i.pravatar.cc/100?img=3"}
+                      alt="Profile"
+                      className="w-20 h-20 rounded-full border-2 border-blue-100 dark:border-blue-900 object-cover"
+                    />
+                    <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                    
+                    {/* Edit Image Overlay */}
+                    <button
+                      onClick={handleImageEdit}
+                      className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    >
+                      <Camera className="text-white" size={20} />
+                    </button>
+                  </div>
+                  
+                  {/* Image Upload Modal */}
+                  {isEditingImage && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            Update Profile Picture
+                          </h3>
+                          <button
+                            onClick={handleImageCancel}
+                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="flex justify-center">
+                            <div className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
+                              {imagePreview ? (
+                                <img
+                                  src={imagePreview}
+                                  alt="Preview"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <Camera className="text-gray-400" size={32} />
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <label className="block">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageSelect}
+                                className="hidden"
+                              />
+                              <span className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                <Camera size={16} />
+                                Choose Image
+                              </span>
+                            </label>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                              JPG, PNG or GIF (max 5MB)
+                            </p>
+                          </div>
+                          
+                          <div className="flex gap-3 pt-4">
+                            <button
+                              onClick={handleImageCancel}
+                              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={handleImageUpload}
+                              disabled={!selectedImage}
+                              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+                            >
+                              Update Photo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {user?.name || "User"}
+                    </h2>
+                    <button
+                      onClick={handleImageEdit}
+                      className="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      title="Edit profile picture"
+                    >
+                      <Edit size={16} />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <Mail size={14} />
+                      {user?.email || "user@example.com"}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Phone size={14} />
+                      +1 (555) 123-4567
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Moon className="text-gray-500 dark:text-green-400" />
             </div>
 
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium dark:text-white">Notifications</p>
-                <p className="text-sm text-gray-500">
-                  Enable or disable notifications
-                </p>
+            {/* Households Section */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Building className="text-blue-600 dark:text-blue-400" size={24} />
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Households</h2>
+                <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-2 py-1 rounded-full">
+                  {houses?.length || 0}
+                </span>
               </div>
-              <Bell className="text-gray-500 dark:text-green-500" />
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {houses?.map((house, idx) => (
+                  <div key={idx} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="font-medium text-gray-900 dark:text-white">{house.name}</h3>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Invite Code</span>
+                        <div className="flex items-center gap-2">
+                          <code className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                            {house.joinCode}
+                          </code>
+                          <button
+                            onClick={() => copyInviteCode(house.joinCode)}
+                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
+                            title="Copy invite code"
+                          >
+                            {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <Users size={14} />
+                        <span>{house.members?.length || 0} members</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium dark:text-white">Language</p>
-                <p className="text-sm text-gray-500">Change app language</p>
+            {/* Members Section */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Users className="text-green-600 dark:text-green-400" size={24} />
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Household Members</h2>
+                <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm px-2 py-1 rounded-full">
+                  {members.length}
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Globe className="text-gray-500 dark:text-white" />
-                <select className="border rounded-lg px-2 py-1 text-sm">
-                  <option>English</option>
-                  <option>Spanish</option>
-                  <option>Hindi</option>
-                </select>
+              
+              <div className="space-y-3">
+                {members.map((member, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 p-3 border border-gray-100 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <div className="relative">
+                      <img
+                        src={`https://i.pravatar.cc/40?img=${index + 5}`}
+                        alt={member.user?.name}
+                        className="w-10 h-10 rounded-full"
+                      />
+                      {member.role === "admin" && (
+                        <div className="absolute -top-1 -right-1">
+                          <Shield size={12} className="text-blue-600 bg-white rounded-full p-0.5" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-gray-900 dark:text-white truncate">
+                          {member.user?.name}
+                        </p>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          member.role === "admin"
+                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                            : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                        }`}>
+                          {member.role}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
+                        <Calendar size={12} />
+                        Joined {formatDate(member.joinedAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Settings & Actions */}
+          <div className="space-y-8">
+            
+            {/* Quick Actions */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={switchToHome}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-600 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <Home className="text-blue-600 dark:text-blue-400" size={18} />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">Dashboard</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Return to main dashboard</p>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+                </button>
+                
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 dark:border-gray-600 rounded-lg hover:border-red-300 dark:hover:border-red-600 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                      <LogOut className="text-red-600 dark:text-red-400" size={18} />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">Sign Out</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Secure sign out from your account</p>
+                    </div>
+                  </div>
+                  <ChevronRight size={16} className="text-gray-400 group-hover:text-red-600 transition-colors" />
+                </button>
+              </div>
+            </div>
+
+            {/* Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Settings className="text-gray-600 dark:text-gray-400" size={20} />
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Preferences</h2>
+              </div>
+
+              <div className="space-y-3">
+                <div
+                  onClick={toggleTheme}
+                  className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      {theme === "dark" ? (
+                        <Sun className="text-gray-600 dark:text-gray-400" size={18} />
+                      ) : (
+                        <Moon className="text-gray-600 dark:text-gray-400" size={18} />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">Theme</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {theme === "dark" ? "Dark mode" : "Light mode"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {theme === "dark" ? "Dark" : "Light"}
+                  </div>
+                </div>
+
+                {[
+                  { icon: Bell, label: "Notifications", description: "Manage alerts and notifications" },
+                  { icon: Globe, label: "Language", description: "App language and region" },
+                  { icon: Shield, label: "Privacy", description: "Privacy and security settings" },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 transition-colors cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <item.icon className="text-gray-600 dark:text-gray-400" size={18} />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">{item.label}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={16} className="text-gray-400 group-hover:text-gray-600 transition-colors" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Account Status */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Status</h2>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{members.length}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Members</p>
+                </div>
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{houses?.length || 0}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Households</p>
+                </div>
+                <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg col-span-2">
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">Active</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Account Status</p>
+                </div>
               </div>
             </div>
           </div>

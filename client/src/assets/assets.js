@@ -52,7 +52,7 @@ export const features = [
     description: "Shared shopping lists to keep track of household needs.",
     icon: ShoppingCart,
     color: "text-yellow-500",
-    path: "syn/shop-list",
+    path: "syn/shop-l ist",
     bg: { from: "#3588F2", to: "#0BB0D7" },
   },
 ];

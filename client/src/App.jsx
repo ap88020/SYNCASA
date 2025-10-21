@@ -22,7 +22,7 @@ const ProtectedRoute = ({ token, children }) => {
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const location = useLocation(); // 👈 get current path
+  const location = useLocation();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -43,9 +43,12 @@ const App = () => {
     }
   }, []);
 
-  // 👇 define pages where Navbar/Footer should be hidden
-  const hideLayout =
-    location.pathname === "/house";
+  // ✅ Correct way: Check if current path matches any of the hidden routes
+  const hideLayout = 
+    location.pathname === "/house" || 
+    location.pathname === "/profile";
+
+    const footerHide = location.pathname === "/syn"
 
   return (
     <div className="bg-primary dark:bg-primary-dark min-h-screen flex flex-col">
@@ -86,7 +89,7 @@ const App = () => {
       </main>
 
       <Toaster position="top-bottom" />
-      {!hideLayout && <Footer />}
+      {!hideLayout && !footerHide && <Footer />}
     </div>
   );
 };
