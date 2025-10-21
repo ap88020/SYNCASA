@@ -46,7 +46,7 @@ const App = () => {
   // ✅ Correct way: Check if current path matches any of the hidden routes
   const hideLayout = 
     location.pathname === "/house" || 
-    location.pathname === "/profile";
+    location.pathname === "/profile" || location.pathname === "/login";
 
     const footerHide = location.pathname === "/syn"
 
