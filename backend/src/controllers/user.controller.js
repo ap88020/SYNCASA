@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/user.model.js";
 import generateToken from "../config/generateToken.js";
 import { decodePassword, hashPassword } from "../config/passwordHashing.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const userControllers = {
   register: async (req, res) => {
@@ -9,7 +10,7 @@ const userControllers = {
       const { name, email, password } = req.body;
 
       if (!name || !email || !password) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
           message: "All fields are ( name, email , password ) required",
         });
@@ -38,14 +39,14 @@ const userControllers = {
       const userResponse = {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       };
 
       res.status(201).json({
         success: true,
         message: "User registered successfully",
         token: token,
-        user: userResponse // ✅ Add user data
+        user: userResponse, // ✅ Add user data
       });
     } catch (error) {
       console.log(error);
@@ -99,7 +100,7 @@ const userControllers = {
         success: true,
         message: "Logged In successfully",
         token: token,
-        user: userResponse // ✅ Add user data
+        user: userResponse, // ✅ Add user data
       });
     } catch (error) {
       res.status(500).json({
@@ -111,9 +112,9 @@ const userControllers = {
   },
 
   getProfile: async (req, res) => {
-    try { 
+    try {
       // ✅ FIX: Use req.user._id (from auth middleware) instead of req.user.id
-      const user = await User.findById(req.user._id).select('-password');
+      const user = await User.findById(req.user._id).select("-password");
 
       if (!user) {
         return res.status(404).json({
@@ -132,13 +133,12 @@ const userControllers = {
 
       res.status(200).json({
         success: true,
-        user: userResponse // ✅ Return as "user" not "message"
+        user: userResponse, // ✅ Return as "user" not "message"
       });
-
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
   },

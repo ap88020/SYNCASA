@@ -27,7 +27,6 @@ const Register = () => {
     }
   }, [user, navigate]);
 
-  // ✅ Show toast for success/error messages
   useEffect(() => {
     if (message) {
       if (success) toast.success(message);
@@ -36,7 +35,6 @@ const Register = () => {
     }
   }, [message, success, dispatch]);
 
-  // ✅ Clear messages when switching between login/register
   useEffect(() => {
     dispatch(reset());
   }, [state, dispatch]);

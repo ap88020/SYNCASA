@@ -55,3 +55,5 @@ taskSchema.index({dueDate:1})
 
 
 const taskModel = mongoose.model('Task',taskSchema);
+
+export default taskModel;

@@ -24,8 +24,9 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getProfile, login } from "../feature/auth/authSlice";
+import { getProfile, login , updateProfile} from "../feature/auth/authSlice";
 import { getUserHouse } from "../feature/house/houseSlice";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -125,34 +126,13 @@ const Profile = () => {
     }
   };
 
-  const handleImageUpload = async () => {
-    if (!selectedImage) {
-      alert('Please select an image first');
-      return;
-    }
-
+  const handleImageUpload = async (e) => {
+    e.preventDefault();
     try {
-      // Here you would typically upload to your backend
-      // For now, we'll simulate an upload
-      console.log('Uploading image:', selectedImage);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would dispatch an action to update the profile
-      // dispatch(updateProfileImage(selectedImage));
-      
-      alert('Profile image updated successfully!');
-      setIsEditingImage(false);
-      setSelectedImage(null);
-      setImagePreview(null);
-      
-      // Refresh profile data
-      dispatch(getProfile());
-      
+      await dispatch(updateProfile(imagePreview)).unwrap();
+      toast.success("Image updated successfully");
     } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to upload image. Please try again.');
+      toast.error(error.message);
     }
   };
 

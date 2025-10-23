@@ -25,6 +25,19 @@ export const getProfile = createAsyncThunk(
     }
 )
 
+export const updateProfile = createAsyncThunk(
+    "auth/upateProfile",
+    async (userData,thunkApi) => {
+        try {
+            const response = await authService.updateProfile(userData);
+            return response;
+        } catch (error) {
+            const message = error.response?.data?.message || error.message;
+            return thunkApi.rejectWithValue(message);
+        }
+    }
+)
+
 // ✅ FIX: Remove initialState parameter
 export const register = createAsyncThunk(
     "auth/register",
@@ -110,11 +123,26 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.user = action.payload;
-                state.message = "Login successful!"; // ✅ FIX: Typo
-                console.log("login successful - User:", action.payload); // ✅ Debug
-                console.log("Token stored in localStorage:", localStorage.getItem("token")); // ✅ Debug
+                state.message = "Login successful!"; 
             })
             .addCase(login.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                state.message = action.payload;
+                state.user = null;
+            })
+            // updateProfile
+            .addCase(updateProfile.pending, (state) => {
+                state.loading = true;
+                state.message = "";
+            })
+            .addCase(updateProfile.fulfilled, (state,action) => {
+                state.loading = false;
+                state.success = true;
+                state.user = action.payload;
+                state.message = "Updated successfull"
+            })
+            .addCase(updateProfile.rejected,(state,action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload;
