@@ -173,30 +173,29 @@ export const categoriesData = [
   }
 ];
 
-// Helper function to get priority color
-export const getPriorityColor = (priority) => {
-  switch (priority) {
-    case 'high':
-      return 'text-red-500';
-    case 'medium':
-      return 'text-yellow-500';
-    case 'normal':
-      return 'text-blue-500';
-    default:
-      return 'text-gray-500';
-  }
-};
 
-// Helper function to get priority background color
+export const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "text-red-600 dark:text-red-400";
+      case "medium":
+        return "text-amber-600 dark:text-amber-400";
+      case "low":
+        return "text-green-600 dark:text-green-400";
+      default:
+        return "text-gray-600 dark:text-gray-400";
+    }
+  };
+
 export const getPriorityBgColor = (priority) => {
-  switch (priority) {
-    case 'high':
-      return 'bg-red-100 dark:bg-red-900/20';
-    case 'medium':
-      return 'bg-yellow-100 dark:bg-yellow-900/20';
-    case 'normal':
-      return 'bg-blue-100 dark:bg-blue-900/20';
-    default:
-      return 'bg-gray-100 dark:bg-gray-900/20';
-  }
-};
+    switch (priority) {
+      case "high":
+        return "bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800";
+      case "medium":
+        return "bg-amber-100 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800";
+      case "low":
+        return "bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800";
+      default:
+        return "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+    }
+  };

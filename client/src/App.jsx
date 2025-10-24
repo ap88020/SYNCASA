@@ -14,6 +14,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HouseholdCreation from "./pages/HouseholdCreation";
 import { jwtDecode } from "jwt-decode";
+import TaskForm from "./pages/TaskForm";
 
 const ProtectedRoute = ({ token, children }) => {
   if (!token) return <Navigate to="/login" replace />;
@@ -23,6 +24,8 @@ const ProtectedRoute = ({ token, children }) => {
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
+
+  // const id = param
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -48,7 +51,7 @@ const App = () => {
     location.pathname === "/house" || 
     location.pathname === "/profile" || location.pathname === "/login";
 
-    const footerHide = location.pathname === "/syn"
+    const footerHide = location.pathname.startsWith("/syn")
 
   return (
     <div className="bg-primary dark:bg-primary-dark min-h-screen flex flex-col">
@@ -74,6 +77,15 @@ const App = () => {
             element={
               <ProtectedRoute token={token}>
                 <HouseholdCreation />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/task/:houseId"
+            element={
+              <ProtectedRoute token={token}>
+                <TaskForm />
               </ProtectedRoute>
             }
           />

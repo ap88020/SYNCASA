@@ -39,6 +39,7 @@ const Profile = () => {
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isAdmin,setIsAdmin] = useState(false);
 
   useEffect(() => {
     dispatch(getProfile());
@@ -78,6 +79,35 @@ const Profile = () => {
       setMembers(allMembers);
     }
   }, [houses]);
+
+
+  useEffect(() => {
+  if (!houses?.length || !user?._id) return;
+
+  // Find the house where the current user is a member
+  let found = false;
+
+  for (const house of houses) {
+    const member = house.members?.find(
+      (m) => String(m.user._id) === String(user._id)
+    );
+
+    if (member) {
+      found = true;
+      setIsAdmin(member.role === "admin");
+      console.log("🧩 Found user in house:", house.name);
+      console.log("Role:", member.role);
+      break;
+    }
+  }
+
+  if (!found) {
+    console.warn("⚠️ User not found in any house members list");
+    setIsAdmin(false);
+  }
+}, [houses, user]);
+
+
 
   const copyInviteCode = (joinCode) => {
     navigator.clipboard.writeText(joinCode);
@@ -293,48 +323,77 @@ const Profile = () => {
             </div>
 
             {/* Households Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <Building className="text-blue-600 dark:text-blue-400" size={24} />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Households</h2>
-                <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-2 py-1 rounded-full">
-                  {houses?.length || 0}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {houses?.map((house, idx) => (
-                  <div key={idx} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-medium text-gray-900 dark:text-white">{house.name}</h3>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Invite Code</span>
-                        <div className="flex items-center gap-2">
-                          <code className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                            {house.joinCode}
-                          </code>
-                          <button
-                            onClick={() => copyInviteCode(house.joinCode)}
-                            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
-                            title="Copy invite code"
-                          >
-                            {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <Users size={14} />
-                        <span>{house.members?.length || 0} members</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            import { useNavigate } from "react-router-dom";
+
+// Inside your component
+const navigate = useNavigate();
+
+return (
+  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <div className="flex items-center gap-3 mb-6">
+      <Building className="text-blue-600 dark:text-blue-400" size={24} />
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        Your Households
+      </h2>
+      <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm px-2 py-1 rounded-full">
+        {houses?.length || 0}
+      </span>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {houses?.map((house, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
+        >
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="font-medium text-gray-900 dark:text-white">
+              {house.name}
+            </h3>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Invite Code
+              </span>
+              <div className="flex items-center gap-2">
+                <code className="font-mono text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                  {house.joinCode}
+                </code>
+                <button
+                  onClick={() => copyInviteCode(house.joinCode)}
+                  className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
+                  title="Copy invite code"
+                >
+                  {copied ? (
+                    <Check size={14} className="text-green-600" />
+                  ) : (
+                    <Copy size={14} />
+                  )}
+                </button>
               </div>
             </div>
+
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <Users size={14} />
+              <span>{house.members?.length || 0} members</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate(`/task/${house._id}`)}
+            className="w-full mt-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md transition-colors"
+          >
+            Create Task
+          </button>
+          
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 
             {/* Members Section */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">

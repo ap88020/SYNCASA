@@ -105,8 +105,6 @@ export const authSlice = createSlice({
                 state.success = true;
                 state.user = action.payload;
                 state.message = "Register successfully!";
-                console.log("Register successful - User:", action.payload); // ✅ Debug
-                console.log("Token stored in localStorage:", localStorage.getItem("token")); // ✅ Debug
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false;
@@ -161,7 +159,6 @@ export const authSlice = createSlice({
                     ...action.payload.user
                 }
                 state.message = "Profile added successfully!"
-                console.log("profile loaded.. : ", action.payload)
             })
             .addCase(getProfile.rejected, (state,action) => {
                 state.loading = false;
