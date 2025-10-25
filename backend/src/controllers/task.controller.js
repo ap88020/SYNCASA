@@ -67,6 +67,15 @@ const taskControllers = {
       res.status(500).json({ success: false, message: "Server error" });
     }
   },
+  getTask : async (req,res) => {
+    try {
+      const {id} = req.params;
+      const userId = req.user._id;
+        
+    } catch (error) {
+      
+    }
+  }
 };
 
 export default taskControllers;

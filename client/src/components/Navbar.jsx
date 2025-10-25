@@ -39,7 +39,7 @@ const Navbar = () => {
 
   const goToHome = () => {
     setDropdownOpen(false);
-    navigate("/");
+    navigate("/syn");
   };
 
   const handleLogout = () => {
