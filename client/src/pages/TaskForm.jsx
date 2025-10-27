@@ -57,7 +57,7 @@ const TaskForm = () => {
       toast.success(`Task "${createdTask.title}" created successfully!`);
       // Redirect to tasks page or reset form
       setTimeout(() => {
-        navigate(`/house/${houseId}/tasks`);
+        navigate(`/syn/task-management`);
       }, 1500);
     }
 

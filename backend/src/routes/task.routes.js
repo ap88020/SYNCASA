@@ -5,5 +5,7 @@ import taskController from '../controllers/task.controller.js'
 const route = express.Router();
 
 route.post("/house/:houseId",authUser,taskController.createTask)
+route.get("/data/:houseId",authUser,taskController.getTask);
+route.post("/complete/:taskId",authUser,taskController.completeTask);
 
 export default route;

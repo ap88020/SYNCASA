@@ -19,6 +19,30 @@ export const createTask = createAsyncThunk(
     }
   }
 );
+export const getTask = createAsyncThunk(
+  'task/getTask',
+  async ({houseId}, {getState,rejectWithValue}) => {
+    try {
+      const token = getToken(getState);
+      const response = await taskService.getTask(houseId,token);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+export const completeTask = createAsyncThunk(
+  'task/completeTask',
+  async ({taskId}, {getState,rejectWithValue}) => {
+    try {
+      const token = getToken(getState);
+      const response = await taskService.completeTask(taskId,token);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }  
+)
 
 const taskSlice = createSlice({
   name: 'tasks',
@@ -67,7 +91,35 @@ const taskSlice = createSlice({
         state.error = action.payload?.message || 'Failed to create task';
         state.success = false;
         state.createdTask = null;
-      });
+      })
+      // getTask
+      .addCase(getTask.pending,(state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTask.fulfilled,(state,action) => {
+        state.loading = false;
+        state.tasks = action.payload.data || []
+      })
+      .addCase(getTask.rejected,(state,action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to get task'
+      })
+      //Complete Task 
+      .addCase(completeTask.pending,(state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(completeTask.fulfilled,(state,action) => {
+          // console.log("completeTask payload:", action.payload);
+        state.loading = false;
+        state.success = true;
+        state.tasks = state.tasks.map(task => task._id === action.payload.data._id ? action.payload.data : task);
+      })
+      .addCase(completeTask.rejected,(state,action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to complete task'
+      })
   },
 });
 
