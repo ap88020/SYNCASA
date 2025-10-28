@@ -25,8 +25,7 @@ const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
 
-  // const id = param
-
+  // ✅ Refresh token check when location changes (not only on mount)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
@@ -43,25 +42,29 @@ const App = () => {
         localStorage.removeItem("token");
         setToken(null);
       }
+    } else {
+      setToken(null);
     }
-  }, []);
+  }, [location]); 
 
-  // ✅ Correct way: Check if current path matches any of the hidden routes
-  const hideLayout = 
-    location.pathname === "/house" || 
-    location.pathname === "/profile" || location.pathname === "/login";
+  const hideLayout =
+    location.pathname === "/house" ||
+    location.pathname === "/profile" ||
+    location.pathname === "/login";
 
-    const footerHide = location.pathname.startsWith("/syn")
+  const footerHide = location.pathname.startsWith("/syn");
 
   return (
     <div className="bg-primary dark:bg-primary-dark min-h-screen flex flex-col">
-      {/* 👇 Conditionally render Navbar/Footer */}
       {!hideLayout && <Navbar />}
 
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Register />} />
+          <Route
+            path="/login"
+            element={<Register setToken={setToken} />} 
+          />
 
           <Route
             path="/profile"
@@ -100,7 +103,7 @@ const App = () => {
         </Routes>
       </main>
 
-      <Toaster position="top-bottom" />
+      <Toaster position="top-right" />
       {!hideLayout && !footerHide && <Footer />}
     </div>
   );

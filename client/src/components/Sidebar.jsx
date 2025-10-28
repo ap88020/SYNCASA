@@ -70,7 +70,7 @@ const Sidebar = () => {
                       : "text-gray-400 dark:text-gray-500"
                   }`}
                 />
-                <span className="text-xs font-medium truncate">{label}</span>
+                <span className="text-xs font-medium truncate hidden border-r border-white">{label}</span>
               </>
             )}
           </NavLink>

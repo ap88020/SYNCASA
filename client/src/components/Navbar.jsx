@@ -16,8 +16,12 @@ const Navbar = () => {
 
   // Fetch user profile
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
     dispatch(getProfile());
+  }
   }, [dispatch]);
+
 
   // Update isUser based on response
   useEffect(() => {

@@ -103,7 +103,11 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.user = action.payload;
+                // ✅ FIX: Store user data properly
+                state.user = {
+                    token: action.payload.token,
+                    ...action.payload.user // Spread the user object
+                };
                 state.message = "Register successfully!";
             })
             .addCase(register.rejected, (state, action) => {
@@ -112,7 +116,7 @@ export const authSlice = createSlice({
                 state.message = action.payload;
                 state.user = null;
             })
-            // ✅ FIX: Changed from "Logout" to "Login" cases
+            // Login cases
             .addCase(login.pending, (state) => {
                 state.loading = true;
                 state.message = "";
@@ -120,7 +124,11 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.user = action.payload;
+                // ✅ FIX: Store user data properly
+                state.user = {
+                    token: action.payload.token,
+                    ...action.payload.user // Spread the user object
+                };
                 state.message = "Login successful!"; 
             })
             .addCase(login.rejected, (state, action) => {
@@ -134,17 +142,20 @@ export const authSlice = createSlice({
                 state.loading = true;
                 state.message = "";
             })
-            .addCase(updateProfile.fulfilled, (state,action) => {
+            .addCase(updateProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.user = action.payload;
+                // ✅ FIX: Merge updated user data
+                state.user = {
+                    ...state.user,
+                    ...action.payload.user
+                };
                 state.message = "Updated successfull"
             })
             .addCase(updateProfile.rejected,(state,action) => {
                 state.loading = false;
                 state.success = false;
                 state.message = action.payload;
-                state.user = null;
             })
             // getProfile
             .addCase(getProfile.pending, (state) => {
@@ -154,10 +165,11 @@ export const authSlice = createSlice({
             .addCase(getProfile.fulfilled, (state,action) => {
                 state.loading = false;
                 state.success = true;
+                // ✅ FIX: Merge profile data properly
                 state.user = {
                     ...state.user,
                     ...action.payload.user
-                }
+                };
                 state.message = "Profile added successfully!"
             })
             .addCase(getProfile.rejected, (state,action) => {

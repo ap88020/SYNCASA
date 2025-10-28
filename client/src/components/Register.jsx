@@ -20,12 +20,36 @@ const Register = () => {
   );
 
   // ✅ Redirect to profile if user is authenticated
-  useEffect(() => {
-    if (user && (user.name || user.email)) {
-      toast.success(`Welcome back, ${user.name || user.email}!`);
-      navigate("/profile");
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user && (user.name || user.email)) {
+  //     toast.success(`Welcome back, ${user.name || user.email}!`);
+  //     navigate("/profile");
+  //   }
+  // }, [user, navigate]);
+
+//   useEffect(() => {
+//   console.log("User changed:", user);
+//   if (user && (user.name || user.email)) {
+//     toast.success(`Welcome back, ${user.name || user.email}!`);
+//     navigate("/profile");
+//   }
+// }, [user, navigate]);
+
+// ✅ Redirect to profile if user is authenticated (with token and user data)
+// useEffect(() => {
+//   const token = localStorage.getItem("token");
+//   if (token && user && (user.name || user.email)) {
+//     navigate("/profile");
+//   }
+// }, [user, navigate]);
+
+useEffect(() => {
+  if (success) {
+    navigate("/profile");
+  }
+}, [success, navigate]);
+
+
 
   useEffect(() => {
     if (message) {
