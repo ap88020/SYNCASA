@@ -3,35 +3,35 @@ import axios from "axios";
 const backend_url = import.meta.env.VITE_BACKEND_URL;
 
 const register = async (userData) => {
-  console.log("Registering with:", userData);
+  // console.log("Registering with:", userData);
   const response = await axios.post(`${backend_url}/user/register`, userData, {
     headers: {
       "Content-Type": "application/json",
     },
   });
 
-  console.log("Register response:", response.data);
+  // console.log("Register response:", response.data);
 
   if (response.data.success) {
-    console.log("Setting token:", response.data.token);
+    // console.log("Setting token:", response.data.token);
     localStorage.setItem("token", response.data.token);
   }
   return response.data;
 };
 
 const login = async (userData) => {
-  console.log("Logging in with:", userData);
+  // console.log("Logging in with:", userData);
   const response = await axios.post(`${backend_url}/user/login`, userData, {
     headers: {
       "Content-Type": "application/json",
     },
   });
 
-  console.log("Login response:", response.data);
+  // console.log("Login response:", response.data);
 
   if (response.data.success) {
-    console.log("Setting token:", response.data.token);
-    localStorage.setItem("token", response.data.token);
+    // console.log("Setting token:", response.data.token);
+    // localStorage.setItem("token", response.data.token);
   }
 
   return response.data;
@@ -49,14 +49,14 @@ const getProfile = async () => {
     });
 
     // if (response.data && response.data.success) {
-    //     console.log("Profile data:", response.data);
+        // console.log("Profile data:", response.data);
     // } else {
     //     console.log("Unexpected response format:", response);
     // }
 
     return response.data;
   } catch (error) {
-    console.error("Get profile error:", error);
+    // console.error("Get profile error:", error);
 
     return {
       success: false,
@@ -85,7 +85,7 @@ const updateProfile = async (userData) => {
 
     return response.data;
   } catch (error) {
-    console.error("Get profile error:", error);
+    // console.error("Get profile error:", error);
 
     return {
       success: false,

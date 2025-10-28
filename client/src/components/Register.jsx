@@ -63,50 +63,57 @@ useEffect(() => {
     dispatch(reset());
   }, [state, dispatch]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+  if (!formData.email || !formData.password) {
+    toast.error("Please fill in all required fields");
+    return;
+  }
 
-    if (state === "register" && !formData.name) {
-      toast.error("Please enter your name");
-      return;
-    }
+  if (state === "register" && !formData.name) {
+    toast.error("Please enter your name");
+    return;
+  }
 
-    if (formData.password.length < 3) {
-      toast.error("Password must be at least 3 characters");
-      return;
-    }
+  if (formData.password.length < 3) {
+    toast.error("Password must be at least 3 characters");
+    return;
+  }
 
-    const userData = {
-      email: formData.email.toLowerCase().trim(),
-      password: formData.password,
-    };
-    if (state === "register") userData.name = formData.name;
-
-    const loadingToast = toast.loading(
-      state === "login" ? "Signing you in..." : "Creating your account..."
-    );
-
-    try {
-      if (state === "register") {
-        await dispatch(register(userData)).unwrap();
-        toast.success("Account created successfully!");
-        navigate("/profile");
-      } else {
-        await dispatch(login(userData)).unwrap();
-        toast.success("Login successful!");
-        navigate("/profile");
-      }
-    } catch (error) {
-      toast.error(error || "Something went wrong!");
-    } finally {
-      toast.dismiss(loadingToast);
-    }
+  const userData = {
+    email: formData.email.toLowerCase().trim(),
+    password: formData.password,
   };
+  if (state === "register") userData.name = formData.name;
+
+  const loadingToast = toast.loading(
+    state === "login" ? "Signing you in..." : "Creating your account..."
+  );
+
+  try {
+    let response;
+    if (state === "register") {
+      response = await dispatch(register(userData)).unwrap();
+      toast.success("Account created successfully!");
+    } else {
+      response = await dispatch(login(userData)).unwrap();
+      toast.success("Login successful!");
+    }
+
+    // ✅ Store token safely before navigation
+    if (response?.token) {
+      localStorage.setItem("token", response.token);
+    }
+
+    navigate("/profile");
+  } catch (error) {
+    toast.error(error || "Something went wrong!");
+  } finally {
+    toast.dismiss(loadingToast);
+  }
+};
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

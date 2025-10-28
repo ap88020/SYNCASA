@@ -63,7 +63,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route
             path="/login"
-            element={<Register setToken={setToken} />} 
+            element={<Register setToken={setToken} />} // ✅ pass setToken
           />
 
           <Route
@@ -93,13 +93,21 @@ const App = () => {
             }
           />
 
-          <Route path="/syn" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="task-management" element={<TaskManagement />} />
-            <Route path="bill-splitting" element={<BillSplitting />} />
-            <Route path="group-chat" element={<GroupChat />} />
-            <Route path="shop-list" element={<ShopingList />} />
-          </Route>
+          <Route
+  path="/syn"
+  element={
+    <ProtectedRoute token={token}>
+      <Layout />
+    </ProtectedRoute>
+  }
+>
+  <Route index element={<Dashboard />} />
+  <Route path="task-management" element={<TaskManagement />} />
+  <Route path="bill-splitting" element={<BillSplitting />} />
+  <Route path="group-chat" element={<GroupChat />} />
+  <Route path="shop-list" element={<ShopingList />} />
+</Route>
+
         </Routes>
       </main>
 
