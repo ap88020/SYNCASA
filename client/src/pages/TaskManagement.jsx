@@ -83,11 +83,12 @@ const TaskManagement = () => {
 
       {/* Tasks List */}
       <div className="h-[70vh] overflow-y-scroll space-y-4">
+        {taskD.length === 0 && <div className="text-white px-3 py-2 bg-blue-400 items-center text-center">There is no task</div>}
         {taskD.map((task, index) => (
           <div
             key={task._id || task.id || index}
             className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 task-animate`}
-            style={{ animationDelay: `${index * 0.05}s` }} // stagger effect
+            style={{ animationDelay: `${index * 0.05}s` }} 
           >
             {/* Task Header */}
             <div className="flex justify-between items-center text-center mb-3">

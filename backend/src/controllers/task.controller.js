@@ -1,5 +1,4 @@
 import House from "../models/house.model.js";
-import User from "../models/user.model.js";
 import Task from "../models/task.model.js";
 
 const taskControllers = {
@@ -143,6 +142,42 @@ const taskControllers = {
           message:error.message
         })
       }      
+    },
+    deleteTask: async (req,res) => {
+      try {
+        const {taskId} = req.params;
+        const userId = req.user._id;
+
+        const task = await Task.findById(taskId);
+        if(!task){
+          return res.json({
+            success:false,
+            message:"task not found"
+          })
+        }
+
+        if(task.assignedBy.toString() != userId.toString()){
+          return res.json({
+            success:false,
+            message:"Only admin can delete the task"
+          })
+        }
+
+        const deleted = await Task.findByIdAndDelete(taskId);
+
+        res.json({
+          success:true,
+          message:"Task deleted",
+          deleted
+        })
+
+      } catch (error) {
+        console.log(error);
+        res.json({
+          success:false,
+          message:error.message
+        })
+      }
     }
 };
 

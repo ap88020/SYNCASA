@@ -231,7 +231,7 @@ const HouseCard = () => {
                 <div className="flex items-center space-x-2">
                   {/* Edit Button */}
                   <button
-                    onClick={() => handleEdit(house)}
+                    // onClick={() => handleEdit(house)}
                     className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all duration-200"
                     title="Edit House"
                   >
@@ -240,10 +240,10 @@ const HouseCard = () => {
 
                   {/* View Dashboard Button */}
                   <Link
-                    to={`/house/${house._id}/dashboard`}
+                    // to={`/house/${house._id}/dashboard`}
                     className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group/btn"
                   >
-                    View
+                    In Progress
                     <ArrowRight className="h-4 w-4 ml-1 group-hover/btn:translate-x-0.5 transition-transform" />
                   </Link>
                 </div>

@@ -22,6 +22,7 @@ import {
   X,
   Plus,
   Search,
+  House,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -169,6 +170,8 @@ const Profile = () => {
   const filteredMembers = members.filter((member) =>
     member.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -401,8 +404,8 @@ const Profile = () => {
                 </div>
               ))}
             </div>
+            {houses.length === 0 && <button onClick={()=>navigate('/house')} className="border border-white rounded text-white bg-blue-500 px-2 py-1 w-full text-center items-center ">Create your house</button>}
           </div>
-
           {/* Settings Section */}
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6">
             <div className="flex items-center gap-3 mb-6">
@@ -457,27 +460,16 @@ const Profile = () => {
 
               {[
                 {
-                  icon: Bell,
-                  label: "Notifications",
-                  description: "Manage alerts",
-                  color: "yellow",
-                },
-                {
-                  icon: Globe,
-                  label: "Language",
-                  description: "App language",
-                  color: "blue",
-                },
-                {
-                  icon: Shield,
-                  label: "Privacy",
-                  description: "Security settings",
+                  icon: House,
+                  label: "Create New House",
+                  description: "House form",
                   color: "green",
                 },
               ].map((item, index) => (
                 <div
+                  onClick={()=>navigate("/house")}
                   key={index}
-                  className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 cursor-pointer bg-white/50 dark:bg-gray-700/50"
+                  className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 cursor-pointer bg-white/50 dark:bg-slate-700/50"
                 >
                   <div className="flex items-center gap-3">
                     <div
