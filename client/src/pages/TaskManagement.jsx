@@ -7,7 +7,7 @@ import {
 import { SquareDashedTopSolid, Trash2, SquareCheckBig } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserHouse } from "../feature/house/houseSlice";
-import { getTask , completeTask} from "../feature/task/taskSlice";
+import { getTask , completeTask, deleteTask} from "../feature/task/taskSlice";
 import toast from "react-hot-toast";
 
 const TaskManagement = () => {
@@ -44,9 +44,22 @@ const TaskManagement = () => {
 };
 
 
-  const toggleDelete = (id) => {
-    // dispatch(completeTask({taskId:id}))
-  };
+  const toggleDelete = async (id) => {
+  try {
+    const resultAction = await dispatch(deleteTask({ taskId: id }));
+
+    if (deleteTask.fulfilled.match(resultAction)) {
+      toast.success(resultAction.payload?.message || "Task deleted successfully!");
+    } 
+    else if (deleteTask.rejected.match(resultAction)) {
+      toast.error(resultAction.payload?.message || "Failed to delete task!");
+    }
+  } catch (error) {
+    toast.error("Something went wrong while deleting task");
+    // console.log(error) 
+  }
+};
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

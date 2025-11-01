@@ -42,6 +42,19 @@ const taskService = {
     } catch (error) {
       throw error.response?.data || {message:'Failed to complete task'}
     }
+  },
+  deleteTask: async(taskId,token) => {
+    try {
+      const response = await axios.post(`${backend_url}/task/delete/${taskId}`,{},{
+        headers:{
+          "Content-Type":"application/json",
+           token:token
+        }
+      })
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || {message:'Faild to delete task'}
+    }
   }
   
 };

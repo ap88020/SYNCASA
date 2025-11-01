@@ -44,6 +44,19 @@ export const completeTask = createAsyncThunk(
   }  
 )
 
+export const deleteTask = createAsyncThunk(
+  'task/deleteTask',
+  async ({taskId} , {getState,rejectWithValue}) => {
+    try {
+      const token = getToken(getState);
+      const response = await taskService.deleteTask(taskId,token);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+
 const taskSlice = createSlice({
   name: 'tasks',
   initialState: {
@@ -119,6 +132,21 @@ const taskSlice = createSlice({
       .addCase(completeTask.rejected,(state,action) => {
         state.loading = false;
         state.error = action.payload?.message || 'Failed to complete task'
+      })
+      // Delete-Task
+      .addCase(deleteTask.pending,(state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(deleteTask.fulfilled,(state,action) => {
+        state.loading = false;
+        state.success = true;
+        // const deletId = action.meta.arg.taskId;
+        state.tasks = state.tasks.filter(task => task._id !== action.payload.data._id)
+      })
+      .addCase(deleteTask.rejected,(state,action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to delete task'
       })
   },
 });

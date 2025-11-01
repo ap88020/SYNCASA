@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createHouse, joinHouse } from '../feature/house/houseSlice.js';
 import { toast } from 'react-hot-toast';
+import {useNavigate} from 'react-router-dom'
 
 const HouseholdCreation = () => {
   const [householdName, setHouseholdName] = useState('');
@@ -9,6 +10,7 @@ const HouseholdCreation = () => {
   const [description, setDescription] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [isJoining, setIsJoining] = useState(false);
+  const navigate = useNavigate()
 
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.house);
@@ -28,11 +30,14 @@ const HouseholdCreation = () => {
     if (!joinCode) return toast.error('Join code is required!');
     dispatch(joinHouse({ joinCode }))
       .unwrap()
-      .then(() => toast.success('Joined house successfully!'))
+      .then(() => {
+        toast.success('Joined house successfully!')
+        navigate('/profile')
+      })
       .catch((err) => toast.error(err || 'Failed to join house'));
   };
 
-  return (
+  return (  
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">

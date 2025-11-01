@@ -461,7 +461,7 @@ const Profile = () => {
               {[
                 {
                   icon: House,
-                  label: "Create New House",
+                  label: "Create New House / Join house",
                   description: "House form",
                   color: "green",
                 },

@@ -168,7 +168,7 @@ const taskControllers = {
         res.json({
           success:true,
           message:"Task deleted",
-          deleted
+          data:deleted
         })
 
       } catch (error) {
