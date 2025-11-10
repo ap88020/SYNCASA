@@ -1,47 +1,35 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import http from 'http'
-import { Server } from 'socket.io';
 import connectDB from './src/config/mongodb.js';
 import userRouter from './src/routes/user.routes.js';
 import houseRouter from './src/routes/house.routes.js';
 import taskRouter from './src/routes/task.routes.js';
 
 const app = express();
-const server = http.createServer(app);
 const port = process.env.PORT || 3000;
-const io = new Server(server,{
-    cors:{
-        origin:process.env.CLIENT_URL || "http://localhost:4000",
-        methods:["GET","POST"]
-    }
-})
 
+// 🧩 Connect to MongoDB once at startup
 await connectDB();
 
-
-// middleware
+// 🧩 Middlewares
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-// user 
-app.use('/user',userRouter)
+// 🧩 Routes
+app.use('/user', userRouter);
+app.use('/api', houseRouter);
+app.use('/task', taskRouter);
 
-// house
-app.use('/api',houseRouter)
+app.get('/', (req, res) => {
+  res.send('API is working ✅');
+});
 
-// Task
-app.use('/task',taskRouter);
+// For local dev only:
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+}
 
-app.get('/',(req,res) => {
-    res.send("api is working");
-})
-
-// app.listen(port,() => {
-//     console.log(`App is listening at port : ${port}`)
-//     connectDB()
-// })
-
+// For Vercel:
 export default app;
