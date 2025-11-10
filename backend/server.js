@@ -36,7 +36,9 @@ app.get('/',(req,res) => {
     res.send("api is working");
 })
 
-app.listen(port,() => {
-    console.log(`App is listening at port : ${port}`)
-    connectDB()
-})
+// app.listen(port,() => {
+//     console.log(`App is listening at port : ${port}`)
+//     connectDB()
+// })
+
+export default app;
