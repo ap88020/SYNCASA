@@ -18,6 +18,9 @@ const io = new Server(server,{
     }
 })
 
+await connectDB();
+
+
 // middleware
 app.use(express.json());
 app.use(cors());
