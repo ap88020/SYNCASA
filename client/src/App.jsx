@@ -25,7 +25,6 @@ const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
 
-  // ✅ Refresh token check when location changes (not only on mount)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
