@@ -1,7 +1,6 @@
-import logo from "./logo.png";
-import green_logo from "./logo_green.png";
+import logo from "./logo-Bxso-MED.png";
+import green_logo from "./logo_green-C5Ki934S.png";
 import upload_area from "./upload_area.png"
-
 import {
   ListChecks,
   DollarSign,

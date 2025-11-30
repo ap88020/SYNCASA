@@ -9,15 +9,13 @@ import toast from "react-hot-toast";
 const TaskManagement = () => {
   const [taskD, setTaskD] = useState([]);
   const [house, setHouses] = useState([]);
-  const [selectedHouse, setSelectedHouse] = useState(null); // <-- selected house state
+  const [selectedHouse, setSelectedHouse] = useState(null); 
   const dispatch = useDispatch();
   const { houses } = useSelector((state) => state.house);
   const { tasks, error } = useSelector((state) => state.tasks);
 
   useEffect(() => {
     dispatch(getUserHouse());
-    // optional: load all tasks initially if you want
-    // dispatch(getTask());
   }, [dispatch]);
 
   useEffect(() => {
@@ -34,18 +32,10 @@ const TaskManagement = () => {
       // fetch tasks for that house
       dispatch(getTask({ houseId: h._id }));
     } else {
-      // if you want to show all tasks again you can:
-      // dispatch(getTask()); // uncomment if backend supports fetching all tasks
-      // or simply clear tasks (if tasks come from house-specific query)
-      setTaskD([]); // or leave as-is depending on your backend logic
+      setTaskD([]); 
     }
   };
 
-  // If you are *filtering client-side* (i.e. tasks contains all houses tasks),
-  // you can use this filteredTasks instead of relying on backend fetch:
-  // const filteredTasks = selectedHouse
-  //   ? taskD.filter(t => t.houseId === selectedHouse._id)
-  //   : taskD;
 
   const toggleStatus = async (id) => {
     try {
@@ -88,8 +78,7 @@ const TaskManagement = () => {
     });
   };
 
-  // choose tasks to show: (if server returns tasks for selected house then taskD is already correct)
-  const tasksToShow = taskD; // or use filteredTasks for client-side filtering
+  const tasksToShow = taskD; 
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
