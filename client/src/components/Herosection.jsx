@@ -17,7 +17,7 @@ const HeroSection = () => {
       {/* Heading */}
       <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center leading-tight tracking-tight">
         Simplify Your <span className="bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">Home Life</span> with{" "}
-        <span className="text-green-700 dark:text-green-400">SyncCasa</span>
+        <span className="text-green-700 dark:text-green-400">SynCasa</span>
       </h1>
 
       {/* Subtext */}
@@ -25,7 +25,7 @@ const HeroSection = () => {
         The all-in-one platform for shared households — manage chores, split bills,
         assign tasks, and keep everyone connected effortlessly.
       </p>
-
+    
       {/* Call to Action */}
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
         <Link

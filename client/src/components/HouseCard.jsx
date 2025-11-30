@@ -239,13 +239,13 @@ const HouseCard = () => {
                   </button>
 
                   {/* View Dashboard Button */}
-                  <Link
+                  {/* <Link
                     // to={`/house/${house._id}/dashboard`}
                     className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 group/btn"
                   >
                     In Progress
                     <ArrowRight className="h-4 w-4 ml-1 group-hover/btn:translate-x-0.5 transition-transform" />
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
